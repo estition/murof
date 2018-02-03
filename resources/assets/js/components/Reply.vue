@@ -27,7 +27,7 @@
                 <!--</form>-->
             </div>
 
-            <div v-else v-html="body"></div>
+            <div ref="reply-body" v-else v-html="body"></div>
         </div>
 
         <div class="panel-footer level" v-if="authorize('owns', reply) || authorize('owns', reply.thread)">
@@ -79,6 +79,20 @@
                 this.isBest = (id === this.id);
             });
         },
+		
+		mounted() {
+            console.log('Reply Highlight');
+            this.highlight(this.$refs['reply-body']);
+        },
+
+        watch: {
+            editing() {
+                if(!this.editing) {
+                    setTimeout(() => this.highlight(this.$refs['reply-body']), 50)
+                }
+            }
+        },
+
 
         methods: {
             update() {
