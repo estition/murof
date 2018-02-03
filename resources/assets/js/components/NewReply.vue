@@ -9,7 +9,7 @@
                           rows="5"
                           required
                           v-model="body"></textarea>-->
-				<wysiwyg name="body" v-model="body" placeholder="Have something to say?" :shouldClear="completed"></wysiwyg>
+				<wysiwyg name="body" v-model="body" placeholder="Have something to say?"></wysiwyg>
             </div>
 
             <button type="submit"
@@ -31,8 +31,7 @@
     export default {
         data() {
             return {
-                body: '',
-				completed: false
+                body: ''
             };
         },
 
@@ -55,8 +54,6 @@
                 axios.post(location.pathname + '/replies', { body: this.body })
                     .then(({data}) => {
                         this.body = '';
-						this.completed = true;
-
                         flash('Your reply has been posted.');
 
                         this.$emit('created', data);
