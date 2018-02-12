@@ -76,10 +76,12 @@ class Thread extends Model
 
         static::deleting(function ($thread) {
             $thread->replies->each->delete();
+			$thread->creator->loseReputation('thread_published');
         });
 		
 		static::created(function ($thread) {
             $thread->update(['slug' => $thread->title]);
+			$thread->creator->gainReputation('thread_published');
         });
     }
 
@@ -249,9 +251,23 @@ class Thread extends Model
      */
     public function markBestReply(Reply $reply)
     {
+		if ($this->hasBestReply()) {
+            $this->bestReply->owner->loseReputation('best_reply_awarded');
+         }
         $this->update(['best_reply_id' => $reply->id]);
+		
+		$reply->owner->gainReputation('best_reply_awarded');
     }
 	
+	/**
+     * Determine if the thread has a current best reply.
+     *
+     * @return bool
+     */
+    public function hasBestReply()
+    {
+        return ! is_null($this->best_reply_id);
+    }
 	
     /**
      * Get the indexable data array for the model.
