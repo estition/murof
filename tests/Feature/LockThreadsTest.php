@@ -17,14 +17,18 @@ class LockThreadsTest extends TestCase
     /** @test */
     function administrators_can_lock_threads()
     {
-        $this->signIn(factory('App\User')->states('administrator')->create());
+        $user = factory('App\User')->create();
+        config(['murof.administrators' => [ $user->email ]]);
+        $this->signIn($user);
         $thread = create('App\Thread', ['user_id' => auth()->id()]);
         $this->post(route('locked-threads.store', $thread));
          $this->assertTrue($thread->fresh()->locked, 'Failed asserting that the thread was locked.');
     }
 	function administrators_can_unlock_threads()
     {
-        $this->signIn(factory('App\User')->states('administrator')->create());
+        $user = factory('App\User')->create();
+        config(['murof.administrators' => [ $user->email ]]);
+        $this->signIn($user);
 
         $thread = create('App\Thread', ['user_id' => auth()->id(), 'locked' => true]);
 
