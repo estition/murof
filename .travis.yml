@@ -6,7 +6,7 @@ php:
 
 before_script:
   - cp .env.travis .env
-  - composer install --no-interaction
+  - composer.phar install --no-ansi --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader
   - php artisan key:generate
 
 services:
